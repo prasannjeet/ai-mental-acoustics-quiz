@@ -1,0 +1,44 @@
+<nb-card>
+  <nb-card-header>Question {{ currentQuestion + 1 }}</nb-card-header>
+  <nb-card-body>
+    <nb-card>
+      <nb-card-body>
+        <img *ngFor="let image of getTheCurrentQuestionImages()" [src]="image" alt="questions" style="max-width: 200px" class="ai-questions">
+      </nb-card-body>
+    </nb-card>
+    <nb-card>
+      <nb-card-body>
+        <nb-radio-group [(ngModel)]="selectedOption">
+          <nb-radio class = "ai-radio-container"
+                    *ngFor="let option of getTheCurrentQuestionOptions()"
+                    [value]="option"
+                    (click)="selectOption(option)"
+                    class="inline-radio">
+            <img [src]="option" alt="option" style="max-width: 200px">
+          </nb-radio>
+        </nb-radio-group>
+      </nb-card-body>
+      <nb-card-footer>
+        <nb-progress-bar [value]="getProgressBarValue()" [status]="getStatus()" size="giant"></nb-progress-bar>
+        <nb-icon icon="clock-outline" [options]="{ animation: { type: 'pulse', infinite: true } }"></nb-icon>
+        <div class="text-center">{{ getTimerValue() }}</div>
+      </nb-card-footer>
+    </nb-card>
+  </nb-card-body>
+  <nb-card-footer>
+<!--    <button nbButton status="primary" (click)="nextQuestion()">Next</button>-->
+    <button
+      nbButton status="danger"
+      (click)="refreshPage()"
+    >
+      Reset
+    </button>
+  </nb-card-footer>
+</nb-card>
+
+<!--<div *ngIf="showResult">-->
+<!--  <h3>Results:</h3>-->
+<!--  <p *ngFor="let question of getQuestionKeys(); let i=index">-->
+<!--    {{i + 1}}. {{question}} - {{answers[question]}}-->
+<!--  </p>-->
+<!--</div>-->

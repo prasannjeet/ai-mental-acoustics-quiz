@@ -1,0 +1,18 @@
+.ai-radio-container {
+  display: block;
+  //flex-direction: column;
+  //margin-bottom: 10px;
+}
+
+.inline-radio {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.ai-questions {
+  margin-right: 10px;
+}
+
+nb-progress-bar ~ nb-progress-bar {
+  margin-top: 1rem;
+}
