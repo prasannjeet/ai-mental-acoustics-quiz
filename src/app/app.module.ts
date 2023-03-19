@@ -39,7 +39,7 @@ import {HttpClientModule} from "@angular/common/http";
     HttpClientModule,
     NbProgressBarModule,
     NbIconModule,
-    NbToastrModule.forRoot()
+    NbToastrModule.forRoot(),
   ],
   providers: [
     NbToastrService,
