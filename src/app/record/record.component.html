@@ -10,6 +10,6 @@
     </button>
   </nb-card-body>
   <nb-card-footer>
-
+    <app-progress [maxTimerValue]=15 [tick]="stopRecording.bind(this)"></app-progress>
   </nb-card-footer>
 </nb-card>

@@ -22,6 +22,7 @@ export class ProgressComponent implements OnInit {
 
   ngOnInit(): void {
     this.MAX_TIMER_VALUE = this.maxTimerValue;
+    this.timerValue = this.MAX_TIMER_VALUE;
     // Start the timer
     this.subscription = interval(this.REFRESH_INTERVAL).subscribe(() => {
       this.timerValue -= this.TIMER_TICK_VALUE;

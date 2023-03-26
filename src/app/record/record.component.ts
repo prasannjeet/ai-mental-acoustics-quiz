@@ -66,6 +66,8 @@ export class RecordComponent implements OnInit {
         let items: any = e.data;
         this.chunks.push(items);
       };
+    }).then(() => {
+      this.startRecording();
     }).catch((err) => {
       console.error(`The following getUserMedia error occurred: ${err}`);
     });
