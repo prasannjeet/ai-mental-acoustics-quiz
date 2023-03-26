@@ -1,4 +1,5 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-intro',
@@ -8,7 +9,8 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 })
 export class IntroComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

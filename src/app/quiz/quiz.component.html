@@ -1,13 +1,15 @@
 <nb-card class="ai-main-card">
   <nb-card-header style="display: flex">
-    Question {{ currentQuestion + 1 }}
+    Question {{ currentQuestion + 1 }} {{getTheCurrentQuestionTitle()}}
     <button style="margin-left: auto" nbButton status="danger" (click)="refreshPage()">Reset</button>
     <button nbButton (click)="nextQuestion()">Next</button>
   </nb-card-header>
   <nb-card-body class="ai-outer-card">
     <nb-card class="ai-card-1">
       <nb-card-body class="ai-question-text">
-        Find out the next image in this sequence. Choose one option from the right.
+        <nb-icon icon="question-mark-outline" [options]="{ animation: { type: 'pulse', infinite: true } }"></nb-icon>
+        <nb-icon icon="question-mark-outline" [options]="{ animation: { type: 'pulse', infinite: true } }"></nb-icon>
+         Observe the boxes and find out the next image in this sequence.
       </nb-card-body>
       <nb-card-body>
       <div class="ai-question-image-group-container">
@@ -21,6 +23,11 @@
       </nb-card-body>
     </nb-card>
     <nb-card class="ai-card-2">
+      <nb-card-body class="ai-question-text">
+        Click on one of the options from below.
+        <nb-icon icon="arrow-downward-outline" [options]="{ animation: { type: 'pulse', infinite: true } }"></nb-icon>
+        <nb-icon icon="arrow-downward-outline" [options]="{ animation: { type: 'pulse', infinite: true } }"></nb-icon>
+      </nb-card-body>
       <nb-card-body>
         <div class="ai-image-group-container">
           <div class="ai-image-container"
@@ -35,10 +42,7 @@
     </nb-card>
   </nb-card-body>
   <nb-card-footer>
-    <nb-progress-bar [value]="getProgressBarValue()" [status]="getStatus()" size="giant">
-      <nb-icon icon="clock-outline" [options]="{ animation: { type: 'pulse', infinite: true } }"></nb-icon>
-      <div class="text-center">{{ getTimerValue() }}</div>
-    </nb-progress-bar>
+    <app-progress [maxTimerValue]=10 [tick]="tick.bind(this)"></app-progress>
   </nb-card-footer>
 </nb-card>
 

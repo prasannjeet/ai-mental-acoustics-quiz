@@ -17,12 +17,16 @@ import { IntroComponent } from './intro/intro.component';
 import { QuizComponent } from './quiz/quiz.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
+import { RecordComponent } from './record/record.component';
+import { ProgressComponent } from './progress/progress.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     IntroComponent,
     QuizComponent,
+    RecordComponent,
+    ProgressComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,7 +47,7 @@ import {HttpClientModule} from "@angular/common/http";
   ],
   providers: [
     NbToastrService,
-    NbOverlayService
+    NbOverlayService,
   ],
   bootstrap: [AppComponent]
 })

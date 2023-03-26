@@ -15,11 +15,6 @@ import { Router } from '@angular/router';
 })
 export class QuizComponent implements OnInit {
 
-  private readonly MAX_TIMER_VALUE = 10; // in seconds
-  private readonly REFRESH_INTERVAL = 10; // in milliseconds
-  private readonly TIMER_TICK_VALUE = 0.01; // in seconds
-  timerValue: number = this.MAX_TIMER_VALUE;
-  private subscription: Subscription | undefined;
   millisecondValue: number = 0;
 
 
@@ -50,39 +45,8 @@ export class QuizComponent implements OnInit {
     this.quizForm = this.fb.group({
       selectedOption: ''
     });
-    // Start the timer
-    this.subscription = interval(this.REFRESH_INTERVAL).subscribe(() => {
-      this.timerValue -= this.TIMER_TICK_VALUE;
-      if (this.timerValue < 0) {
-        this.timerValue = this.MAX_TIMER_VALUE;
-        this.tick();
-      }
-    });
-  }
 
-  getStatus(): string {
-    const timerPercentage = this.getProgressBarValue();
-
-    if (timerPercentage > 75) {
-      return 'primary';
-    } else if (timerPercentage > 40) {
-      return 'warning';
-    } else {
-      return 'danger';
-    }
-  }
-
-  getProgressBarValue(): number {
-    return Math.floor((this.timerValue / this.MAX_TIMER_VALUE) * 100);
-  }
-
-  getTimerValue(): string {
-    // convert this.MAX_TIMER_VALUE to SS.sss format
-    const seconds = Math.floor(this.timerValue);
-    const milliseconds = Math.floor((this.timerValue - seconds) * 1000);
-    const secondsString = seconds < 10 ? `0${seconds}` : `${seconds}`;
-    const millisecondsString = milliseconds < 100 ? `0${milliseconds}` : `${milliseconds}`;
-    return `${secondsString}.${millisecondsString}`;
+    window.scrollTo(0, document.body.scrollHeight);
   }
 
   tick(): void {
@@ -127,15 +91,18 @@ export class QuizComponent implements OnInit {
     return [];
   }
 
+  public getTheCurrentQuestionTitle(): string | undefined {
+    if (this.theCurrentQuestion) {
+      return this.capitalizeFirstLetter(this.theCurrentQuestion.questionType) + " " + this.theCurrentQuestion.questionName;
+    }
+    return undefined;
+  }
+
   public nextQuestion() {
     if (this.questionData) {
       this.theCurrentQuestion = this.questionData.next();
       this.currentQuestion++;
     }
-  }
-
-  public resetQuiz() {
-    console.log("resetting quiz");
   }
 
   selectOption(option: string) {
@@ -159,11 +126,9 @@ export class QuizComponent implements OnInit {
     });
   }
 
-  ngOnDestroy(): void {
-    // unsubscribe from the timer
-    this.subscription?.unsubscribe();
+  capitalizeFirstLetter(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
-
 
 }
 

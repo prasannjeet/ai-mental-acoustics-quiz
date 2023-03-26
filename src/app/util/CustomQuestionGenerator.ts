@@ -64,11 +64,19 @@ export class CustomQuestionGenerator {
   }
 
   private getNextBasicQuestion(): Problem {
-    return this.getItemAt(this.questionBankBasic, this.basicQuestionIndex++);
+    let problemKey = Object.keys(this.questionBankBasic)[this.basicQuestionIndex++];
+    let problem: Problem = this.questionBankBasic[problemKey];
+    problem.questionType = "basic";
+    problem.questionName = problemKey;
+    return problem;
   }
 
   private getNextChallengeQuestion(): Problem {
-    return this.getItemAt(this.questionBankChallenge, this.challengeQuestionIndex++);
+    let problemKey = Object.keys(this.questionBankChallenge)[this.challengeQuestionIndex++];
+    let problem: Problem = this.questionBankChallenge[problemKey];
+    problem.questionType = "challenging";
+    problem.questionName = problemKey;
+    return problem;
   }
 
   private getItemAt(object: ProblemData, index: number): Problem {
