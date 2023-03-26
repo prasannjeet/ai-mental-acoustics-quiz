@@ -1,0 +1,15 @@
+<nb-card status="danger">
+  <nb-card-header>
+    <h2>Record your voice</h2>
+  </nb-card-header>
+  <nb-card-body>
+    <p class="big-text">Press and hold the button to record</p>
+    <button nbButton shape="round" [class.btn-red]="!pressed" [class.btn-green]="pressed"
+            (mousedown)="startRecording()" (mouseup)="stopRecording()" (mouseleave)="onMouseLeave()" class="ai-icon-button">
+      <img src="assets/mic_icon.png" alt="mic icon"/>
+    </button>
+  </nb-card-body>
+  <nb-card-footer>
+
+  </nb-card-footer>
+</nb-card>
