@@ -1,0 +1,50 @@
+<nb-card *ngIf="showQuestionPage" class="ai-main-card">
+  <nb-card-header style="display: flex">
+    Question {{ currentQuestion + 1 }} {{getTheCurrentQuestionTitle()}}
+    <button style="margin-left: auto" nbButton status="danger" (click)="refreshPage()">Reset</button>
+    <button nbButton (click)="nextQuestion()">Next</button>
+  </nb-card-header>
+  <nb-card-body class="ai-outer-card">
+    <nb-card class="ai-card-1">
+      <nb-card-body class="ai-question-text">
+        <nb-icon icon="question-mark-outline" [options]="{ animation: { type: 'pulse', infinite: true } }"></nb-icon>
+        <nb-icon icon="question-mark-outline" [options]="{ animation: { type: 'pulse', infinite: true } }"></nb-icon>
+         Observe the boxes and find out the next image in this sequence.
+      </nb-card-body>
+      <nb-card-body>
+      <div class="ai-question-image-group-container">
+        <div class="ai-image-container"
+             *ngFor="let image of getTheCurrentQuestionImages()"
+             [ngStyle]="{'flex-basis': getTheCurrentQuestionOptions().length > 6 ? 'calc(20% - 10px)' : 'calc(33.33% - 10px)'}"
+             [style.background-color]="'transparent'">
+          <img [src]="image" alt="questions">
+        </div>
+      </div>
+      </nb-card-body>
+    </nb-card>
+    <nb-card class="ai-card-2">
+      <nb-card-body class="ai-question-text">
+        Click on one of the options from below.
+        <nb-icon icon="arrow-downward-outline" [options]="{ animation: { type: 'pulse', infinite: true } }"></nb-icon>
+        <nb-icon icon="arrow-downward-outline" [options]="{ animation: { type: 'pulse', infinite: true } }"></nb-icon>
+      </nb-card-body>
+      <nb-card-body>
+        <div class="ai-image-group-container">
+          <div class="ai-image-container"
+               *ngFor="let option of getTheCurrentQuestionOptions()"
+               [ngStyle]="{'flex-basis': getTheCurrentQuestionOptions().length > 6 ? 'calc(20% - 10px)' : 'calc(33.33% - 10px)'}"
+               [style.background-color]="selectedOption === option ? 'blue' : 'transparent'"
+               (click)="selectOption(option)">
+            <img [src]="option" alt="option">
+          </div>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </nb-card-body>
+  <nb-card-footer>
+    <app-progress [maxTimerValue]=10 [tick]="displayRecordPage.bind(this)"></app-progress>
+  </nb-card-footer>
+</nb-card>
+<app-record *ngIf="!showQuestionPage" [onRecorderStopped]="displayNextQuestion.bind(this)" [fileName]="(currentQuestion+1).toString()"></app-record>
+
+<!--               [ngStyle]="{'flex-basis': getTheCurrentQuestionOptions().length > 6 ? 'calc(20% - 10px)' : 'calc(33.33% - 10px)'}"-->
