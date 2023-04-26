@@ -1,0 +1,46 @@
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+spring:
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_SCHEME}://${KEYCLOAK_AUTH_SERVER}:${KEYCLOAK_AUTH_PORT}/realms/${REALM_NAME}
+          jwk-set-uri: ${KEYCLOAK_SCHEME}://${KEYCLOAK_AUTH_SERVER}:${KEYCLOAK_AUTH_PORT}/realms/${REALM_NAME}/protocol/openid-connect/certs
+
+jwt:
+  auth:
+    converter:
+      resource-id: ${KEYCLOAK_CLIENT_ID}
+      principal-attribute: preferred_username
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+server:
+  port: '8080' # Or any available port you want
+  servlet:
+    context-path: /api
+
+keycloak-config:
+  keycloakScheme: ${KEYCLOAK_SCHEME}
+  keycloakAuthServer: ${KEYCLOAK_AUTH_SERVER}
+  keycloakAuthPort: ${KEYCLOAK_AUTH_PORT}
+  keycloakRealmName: ${REALM_NAME}
+  keycloakPublicKey: ${KEYCLOAK_PUBLIC_KEY}
+  keycloakClientId: ${KEYCLOAK_CLIENT_ID}
+  keycloakClientSecret: ${KEYCLOAK_CLIENT_SECRET}
+  allowedOrigins: ${ALLOWED_ORIGINS}

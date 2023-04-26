@@ -1,0 +1,17 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: nirvana-ingressroute
+  namespace: 4me307
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - match: Host(`nirvana.ooguy.com`)
+      kind: Rule
+      services:
+        - name: note-nirvana-service-service
+          port: 8080
+  tls:
+    certResolver: dynu

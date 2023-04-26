@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: note-nirvana-service
+  namespace: 4me307
+spec:
+  selector:
+    matchLabels:
+      app: note-nirvana-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: note-nirvana-service
+    spec:
+      containers:
+      - name: note-nirvana-service
+        image: prasannjeet/notenirvana:0.0.1-SNAPSHOT
+        imagePullPolicy: Always
+        envFrom:
+          - configMapRef:
+              name: note-nirvana-service-config
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: https
+          containerPort: 8443
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: note-nirvana-service-service
+  namespace: 4me307
+  labels:
+    app: note-nirvana-service
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: note-nirvana-service-http
+  - port: 8443
+    targetPort: 8443
+    protocol: TCP
+    name: note-nirvana-service-https
+  selector:
+    app: note-nirvana-service

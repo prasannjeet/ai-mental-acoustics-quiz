@@ -1,0 +1,6 @@
+apiVersion: gitlab.com/gitlab-org/cluster-integration/gitlab-agent/v1alpha1
+kind: GitlabAgentConfig
+gitops:
+  - path: "ps222vt/internet-architectures/deployments/k8s"
+    branches:
+      - main
