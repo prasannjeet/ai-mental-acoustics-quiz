@@ -3,10 +3,10 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
 import {QuestionSettings} from "../util/QuestionSettings";
 import {QuestionData} from "../util/QuestionData";
-import {interval, map, Observable, Subscription} from "rxjs";
+import {map, Observable} from "rxjs";
 import {Problem} from "../util/ProblemData";
 import {NbOverlayService, NbToastrService} from '@nebular/theme';
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-quiz',
@@ -14,13 +14,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./quiz.component.scss']
 })
 export class QuizComponent implements OnInit {
-
-  millisecondValue: number = 0;
-
-
   questionData: QuestionData | undefined;
   theCurrentQuestion: Problem | undefined;
   currentQuestion: number = 0;
+  showQuestionPage: boolean = true;
 
   qConfig: QuestionSettings = {
     basicQuestionCount : 5,
@@ -30,7 +27,6 @@ export class QuizComponent implements OnInit {
   }
 
   quizForm: FormGroup | undefined; // form to hold the selected option for the current question
-  private correctAnswers: {[key: string]: string} = {};
   public selectedOption: string | undefined;
 
   constructor(private fb: FormBuilder, private http: HttpClient, private toastrService: NbToastrService, private overlayService: NbOverlayService, private router: Router) {
@@ -128,6 +124,15 @@ export class QuizComponent implements OnInit {
 
   capitalizeFirstLetter(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  displayNextQuestion() {
+    this.showQuestionPage = true;
+    this.tick();
+  }
+
+  displayRecordPage() {
+    this.showQuestionPage = false;
   }
 
 }

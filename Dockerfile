@@ -17,3 +17,6 @@ CMD ["nginx", "-g", "daemon off;"]
 # docker run -d -p 4200:80 --name tweetfront prasannjeet/tweetfront:1.0.m1
 # intel variation: prasannjeet/tweetfront:1.0.intel
 # docker buildx build --push --platform linux/arm64/v8,linux/amd64 --tag prasannjeet/aimaquiz:1.0.0 .
+
+
+#docker buildx build --push --platform linux/arm64/v8,linux/amd64 --tag prasannjeet/aimaquiz:1.3.0 .
