@@ -2,7 +2,7 @@
 
 This is a Spring Boot application that uses OpenAPI 3.0 specifications to generate API classes, provides API documentation using Swagger UI, and can be containerized using Docker for easy deployment and distribution.
 
-## Table of Contents
+## Table of Contents. Test
 
 -   [Getting Started](#getting-started)
 -   [OpenAPI and Code Generation](#openapi-and-code-generation)
