@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  hostname: 'http://localhost:4200',
+  hostname: 'http://localhost:4201',
   serverUrl: '/api',
   appUrl: 'http://localhost:8080',
   keycloak: {

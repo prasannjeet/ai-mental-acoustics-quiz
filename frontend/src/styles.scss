@@ -1,11 +1,9 @@
 @use 'themes' as *;
-
 @use '@nebular/theme/styles/globals' as *;
-
-@import '~@nebular/theme/styles/theming';
-@import '~@nebular/theme/styles/themes/dark';
-@import '~@nebular/theme/styles/themes/default';
-@import '~@nebular/theme/styles/themes/cosmic';
+@use '@nebular/theme/styles/theming' as theming;
+@use '@nebular/theme/styles/themes/dark' as dark;
+@use '@nebular/theme/styles/themes/default' as default;
+@use '@nebular/theme/styles/themes/cosmic' as cosmic;
 
 @include nb-install() {
   @include nb-theme-global();
