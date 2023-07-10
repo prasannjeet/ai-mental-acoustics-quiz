@@ -1,4 +1,4 @@
-package com.prasannjeet.notenirvana.jpa.entity;
+package com.prasannjeet.aima.jpa.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,9 +1,9 @@
-package com.prasannjeet.notenirvana.jpa.repository;
+package com.prasannjeet.aima.jpa.repository;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.prasannjeet.notenirvana.jpa.entity.NoteEntity;
+import com.prasannjeet.aima.jpa.entity.NoteEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface NoteEntityRepository extends JpaRepository<NoteEntity, String> {

@@ -1,4 +1,4 @@
-package com.prasannjeet.notenirvana.config;
+package com.prasannjeet.aima.config;
 
 import static java.util.Arrays.stream;
 import static java.util.List.of;
@@ -7,12 +7,11 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 import static org.springframework.security.oauth2.jwt.JwtDecoders.fromIssuerLocation;
 import static org.springframework.security.oauth2.jwt.JwtValidators.createDefaultWithIssuer;
 
-import com.prasannjeet.notenirvana.config.util.JwtAudienceValidator;
-import com.prasannjeet.notenirvana.config.util.JwtAuthConverter;
-import com.prasannjeet.notenirvana.config.util.RolesLoggingFilter;
+import com.prasannjeet.aima.config.util.JwtAudienceValidator;
+import com.prasannjeet.aima.config.util.JwtAuthConverter;
+import com.prasannjeet.aima.config.util.RolesLoggingFilter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -37,9 +36,6 @@ public class WebSecurityConfig {
   private static final String DEFAULT_AUDIENCE = "account";
   private final JwtAuthConverter jwtAuthConverter;
   private final KeycloakConfig keycloakConfig;
-
-  @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
-  private String issuerUri;
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -85,9 +81,11 @@ public class WebSecurityConfig {
 
   @Bean
   public JwtDecoder jwtDecoder() {
-    NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder) fromIssuerLocation(issuerUri);
+    NimbusJwtDecoder jwtDecoder =
+        (NimbusJwtDecoder) fromIssuerLocation(keycloakConfig.keycloakIssuerUri());
     OAuth2TokenValidator<Jwt> withAudience = new JwtAudienceValidator(DEFAULT_AUDIENCE);
-    OAuth2TokenValidator<Jwt> withIssuer = createDefaultWithIssuer(issuerUri);
+    OAuth2TokenValidator<Jwt> withIssuer =
+        createDefaultWithIssuer(keycloakConfig.keycloakIssuerUri());
     OAuth2TokenValidator<Jwt> validator =
         new DelegatingOAuth2TokenValidator<>(withIssuer, withAudience);
     jwtDecoder.setJwtValidator(validator);

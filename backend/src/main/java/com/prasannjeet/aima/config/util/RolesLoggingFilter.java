@@ -1,4 +1,4 @@
-package com.prasannjeet.notenirvana.config.util;
+package com.prasannjeet.aima.config.util;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -1,4 +1,4 @@
-package com.prasannjeet.notenirvana;
+package com.prasannjeet.aima;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

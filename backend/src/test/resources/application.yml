@@ -11,14 +11,21 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: https://keycloak.ooguy.com:8443/realms/timetable-oauth
-          jwk-set-uri: https://keycloak.ooguy.com:8443/realms/timetable-oauth/protocol/openid-connect/certs
+          issuer-uri: https://keycloak.ooguy.com/realms/aima
+          jwk-set-uri: https://keycloak.ooguy.com/realms/aima/protocol/openid-connect/certs
 
 jwt:
   auth:
     converter:
-      resource-id: note-nirvana
+      resource-id: aima-spring
       principal-attribute: preferred_username
 
 keycloak-config:
+  keycloakScheme: https
+  keycloakAuthServer: keycloak.ooguy.com
+  keycloakAuthPort: 443
+  keycloakRealmName: aima
+  keycloakPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1AEUTIbsHhDq9LdIiQoPc8Edfz2Vjr8YltG4FfG4LATJ4nxjo2Be7y5Gh42uz6Ud7lFZqzaO0ZTIsxmwTaH9JNk8o2asdPaEr5RB5l3B+aE+wS6hWJ5q0Qb4sZQZLRswStItOEY3T6NCMSdMvd7dvib4IetphciTf/xBZ4FXEDlW0+OFvYU0gOOX9DUmqahb4rJ9hWsNeW+LIL8nfLrYOQywpgxeLB2tJU4NXr0xAs219T6a4FSqKgM/78ynyrAvSuyeDUgZsN+cf26HrALWXD5pNE1Y1HP/hxWOvx80e5soqS+XD1joCLzOK/qZJQUKsQtO1hxiHDFhgFYwIWx6cQIDAQAB
+  keycloakClientId: aima-spring
+  keycloakClientSecret: ZtdUi6SSGGY8pmtGEfW99AbjSyVcrZUx
   allowedOrigins: http://localhost:3000/,http://localhost:3000

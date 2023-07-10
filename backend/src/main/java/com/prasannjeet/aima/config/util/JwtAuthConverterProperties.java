@@ -1,4 +1,4 @@
-package com.prasannjeet.notenirvana.config.util;
+package com.prasannjeet.aima.config.util;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -1,4 +1,4 @@
-package com.prasannjeet.notenirvana.config.util;
+package com.prasannjeet.aima.config.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

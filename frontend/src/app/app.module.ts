@@ -1,6 +1,8 @@
-import { NgModule } from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
+import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
+import { initializer } from 'src/utils/app-inits';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -44,10 +46,17 @@ import { ProgressComponent } from './progress/progress.component';
     NbProgressBarModule,
     NbIconModule,
     NbToastrModule.forRoot(),
+    KeycloakAngularModule, // add keycloakAngular module
   ],
   providers: [
     NbToastrService,
     NbOverlayService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializer,
+      deps: [KeycloakService],
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

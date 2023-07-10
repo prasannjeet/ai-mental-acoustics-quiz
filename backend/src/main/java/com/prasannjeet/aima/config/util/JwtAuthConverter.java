@@ -1,4 +1,4 @@
-package com.prasannjeet.notenirvana.config.util;
+package com.prasannjeet.aima.config.util;
 
 import java.util.Collection;
 import java.util.Map;

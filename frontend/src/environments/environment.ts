@@ -4,7 +4,14 @@
 
 export const environment = {
   production: false,
-  hostname: 'http://localhost:4201'
+  hostname: 'http://localhost:4200',
+  serverUrl: '/api',
+  appUrl: 'http://localhost:8080',
+  keycloak: {
+    issuer: 'https://keycloak.ooguy.com/',
+    realm: 'aima',
+    clientId: 'aima-frontend',
+  },
 };
 
 /*

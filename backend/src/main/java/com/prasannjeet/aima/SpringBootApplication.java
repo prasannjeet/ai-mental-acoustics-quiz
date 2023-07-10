@@ -1,4 +1,4 @@
-package com.prasannjeet.notenirvana;
+package com.prasannjeet.aima;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

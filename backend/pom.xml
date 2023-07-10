@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>com.prasannjeet</groupId>
-    <artifactId>aima-service</artifactId>
+    <artifactId>aima</artifactId>
     <version>dev-SNAPSHOT</version>
     <name>AI Mental Acoustics Quiz Service</name>
     <description>Backend Service for AI Mental Acoustics Quiz to Store Data</description>
@@ -221,7 +221,6 @@
                             <username>prasannjeet</username>
                             <repository>prasannjeet/${project.artifactId}</repository>
                             <pullNewerImage>false</pullNewerImage>
-                            <dockerfile>target/Dockerfile</dockerfile>
                             <contextDirectory>target</contextDirectory>
                             <testOutputDirectory>target/dockerbuild</testOutputDirectory>
                         </configuration>

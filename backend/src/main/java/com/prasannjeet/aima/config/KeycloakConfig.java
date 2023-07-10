@@ -1,4 +1,4 @@
-package com.prasannjeet.notenirvana.config;
+package com.prasannjeet.aima.config;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -21,4 +21,17 @@ public class KeycloakConfig {
     private String keycloakAuthPort;
     private String keycloakRealmName;
     private String allowedOrigins;
+
+    public String keycloakIssuerUri() {
+        if ("https".equals(keycloakScheme) && "443".equals(keycloakAuthPort)) {
+            return keycloakScheme + "://" + keycloakAuthServer + "/realms/" + keycloakRealmName;
+        } else {
+            return keycloakScheme + "://" + keycloakAuthServer + ":" + keycloakAuthPort + "/realms/" + keycloakRealmName;
+        }
+    }
+
+    public String keycloakJwkSetUri() {
+        return keycloakIssuerUri() + "/protocol/openid-connect/certs";
+    }
+
 }
