@@ -4,6 +4,7 @@
 @use '@nebular/theme/styles/themes/dark' as dark;
 @use '@nebular/theme/styles/themes/default' as default;
 @use '@nebular/theme/styles/themes/cosmic' as cosmic;
+@use '@nebular/theme/styles/themes/corporate' as corporate;
 
 @include nb-install() {
   @include nb-theme-global();

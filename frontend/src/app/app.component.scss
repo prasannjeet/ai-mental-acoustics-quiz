@@ -1,8 +1,8 @@
-@import "../themes.scss";
+@use '../themes' as *;
 
-@include nb-install-component {
-  background: nb-theme(background-basic-color);
-}
+//@include nb-install-component() {
+//  background: nb-theme(background-basic-color-1);
+//}
 
 .ai-logo {
   max-height: 50px;
@@ -12,6 +12,19 @@
   font-size: 1rem;
   font-weight: 150;
   margin-left: 1rem;
-  font-family: nb-theme(font-family-primary);
-  color: nb-theme(text-basic-color);
+  //font-family: nb-theme(font-family-primary), serif;
+  //color: nb-theme(text-basic-color);
 }
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 16px; /* Adjust the padding as needed */
+}
+
+nb-layout-header {
+  width: 100%;
+}
+

@@ -12,6 +12,7 @@ export const environment = {
     realm: 'aima',
     clientId: 'aima-frontend',
   },
+  downloadMp3ToBrowser: false,
 };
 
 /*

@@ -1,6 +1,7 @@
 import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {NbOverlayService, NbToastrService} from "@nebular/theme";
+import {environment} from "../../environments/environment";
 
 declare var MediaRecorder: any;
 declare var lamejs: any;
@@ -19,16 +20,16 @@ export class RecordComponent implements OnInit {
   recording: boolean = false;
   constructor(private cd: ChangeDetectorRef, private dom: DomSanitizer, private toastrService: NbToastrService, private overlayService: NbOverlayService) {}
   pressed: boolean = false;
+  audioData: Blob | null = null;
+
+
   ngOnInit() {
     navigator.mediaDevices.getUserMedia({
       audio: true,
     }).then((stream: MediaStream) => {
-      console.log(stream);
       this.mediaRecorder = new MediaRecorder(stream);
       this.mediaRecorder.onstop = (e: any) => {
-        // console.log('data available after MediaRecorder.stop() called.');
 
-        // var clipName = prompt('Enter a name for your sound clip');
         var clipName = `recording-${this.fileName}`;
 
         var clipContainer = document.createElement('article');
@@ -60,8 +61,8 @@ export class RecordComponent implements OnInit {
         audio.src = audioURL;
         let items: SafeUrl = this.dom.bypassSecurityTrustUrl(audioURL);
         this.audioFiles.push(items);
-        console.log(audioURL);
-        console.log('recorder stopped');
+        // console.log(audioURL);
+        // console.log('recorder stopped');
         this.cd.detectChanges();
 
         // Extract the number of channels and sample rate from the mediaRecorder instance
@@ -91,9 +92,6 @@ export class RecordComponent implements OnInit {
   stopRecording() {
     this.pressed = false;
     this.mediaRecorder.stop();
-    // console.log(this.mediaRecorder.state);
-    // console.log('recorder stopped');
-    this.onRecorderStopped();
   }
 
   onMouseLeave() {
@@ -187,6 +185,7 @@ export class RecordComponent implements OnInit {
       const wavData = this.convertFloat32ArrayToWav(audioData, numChannels, sampleRate);
 
       this.encodeWavToMp3(wavData, (mp3Blob: Blob) => {
+        this.audioData = mp3Blob; // Save the audio data in memory
         callback(mp3Blob, `${fileName}.mp3`);
       });
     };
@@ -195,6 +194,13 @@ export class RecordComponent implements OnInit {
   }
 
   saveBlobAsFile(blob: Blob, fileName: string) {
+    if (environment.downloadMp3ToBrowser) {
+      this.downloadMp3ToBrowser(blob, fileName);
+    }
+    this.onRecorderStopped(blob);
+  }
+
+  private downloadMp3ToBrowser(blob: Blob, fileName: string) {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;

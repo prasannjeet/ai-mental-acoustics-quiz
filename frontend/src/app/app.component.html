@@ -1,7 +1,19 @@
 <nb-layout>
 
   <nb-layout-header fixed>
-    <a href="/"><img src="assets/logo_grey.png" alt="logo" class="ai-logo"></a>
+    <div class="header-container">
+      <a href="/"><img src="assets/logo_grey.png" alt="logo" class="ai-logo"></a>
+      <span *ngIf="isLoggedIn" class="welcome-text">
+        Welcome, {{ userName }}
+        <button
+          nbButton
+          status="danger"
+          size="small"
+          (click)="logout()">
+          Logout
+    </button>
+      </span>
+    </div>
   </nb-layout-header>
 
   <nb-layout-column>
@@ -11,7 +23,8 @@
   </nb-layout-column>
 
   <nb-layout-footer fixed>
-    <p class="ai-text">Prasannjeet Singh - ps222vt@student.lnu.se - This quiz is created as part of the Master's Thesis</p>
+    <p class="ai-text">Prasannjeet Singh - ps222vt@student.lnu.se - This quiz is created as part of the Master's
+      Thesis</p>
   </nb-layout-footer>
 
 </nb-layout>
