@@ -3,10 +3,10 @@
     <h2>Record your voice</h2>
   </nb-card-header>
   <nb-card-body>
-    <p class="size-small">You have 15 seconds to record. Please read the following aloud:</p>
+    <p class="size-small">You have {{recordingTime}} seconds to record. Please read the following aloud:</p>
     <p class="big-text">The quick brown fox jumps over the lazy dog.</p>
   </nb-card-body>
   <nb-card-footer>
-    <app-progress [maxTimerValue]=7 [tick]="stopRecording.bind(this)"></app-progress>
+    <app-progress [maxTimerValue]=recordingTime [tick]="stopRecording.bind(this)"></app-progress>
   </nb-card-footer>
 </nb-card>

@@ -629,3 +629,7 @@ sketch
 
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all,webstorm+all,angular,java,maven,visualstudiocode,git,python,pycharm+all,node,react
+
+# Untrack all environment files:
+**/environment.ts
+**/environment.prod.ts

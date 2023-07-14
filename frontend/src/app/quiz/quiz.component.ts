@@ -1,12 +1,15 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
 import {QuestionSettings} from "../util/QuestionSettings";
 import {QuestionData} from "../util/QuestionData";
-import {map, Observable} from "rxjs";
+import {map, Observable, Subscription} from "rxjs";
 import {Problem} from "../util/ProblemData";
 import {NbOverlayService, NbToastrService} from '@nebular/theme';
 import {Router} from '@angular/router';
+import {NotificationService} from "../util/NotificationService";
+import {KeycloakService} from "keycloak-angular";
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-quiz',
@@ -18,8 +21,17 @@ export class QuizComponent implements OnInit {
   theCurrentQuestion: Problem | undefined;
   currentQuestion: number = 0;
   showQuestionPage: boolean = true;
-  quizData: { question: Problem | undefined, answer: string | undefined, audio: Blob | undefined }[] = [];
-  totalQuestions: number = 10; // Set this to the total number of questions you want
+  quizData: {
+    question: Problem | undefined,
+    answer: string | undefined,
+    audioUrl: string | undefined,
+    startTimestamp?: string | undefined,
+    endTimestamp?: string | undefined
+  }[] = [];
+  startTimeStamp: string | undefined;
+  endTimeStamp: string | undefined;
+  totalQuestions: number = environment.totalQuestions; // Set this to the total number of questions you want
+  userId: string | undefined;
 
   /**
    * 1. `basicQuestionCount`: This variable represents the number of basic questions that will be
@@ -56,15 +68,28 @@ export class QuizComponent implements OnInit {
 
   quizForm: FormGroup | undefined; // form to hold the selected option for the current question
   public selectedOption: string | undefined;
+  private subscription: Subscription;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private toastrService: NbToastrService, private overlayService: NbOverlayService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private toastrService: NbToastrService,
+    private overlayService: NbOverlayService,
+    private router: Router,
+    private notificationService: NotificationService,
+    public keycloakService: KeycloakService,
+    private ngZone: NgZone
+  ) {
+    this.userId = keycloakService.getKeycloakInstance().subject;
     this.loadQuizData().subscribe((qd: QuestionData) => {
       this.questionData = qd;
       this.theCurrentQuestion = this.questionData.next();
     });
+    this.subscription = this.notificationService.onAudioRecorded.subscribe(event => this.handleAudioRecorded(event));
   }
 
   ngOnInit() {
+    this.startTimeStamp = new Date().toISOString();
     // initialize the form with an empty selectedOption
     this.quizForm = this.fb.group({
       selectedOption: ''
@@ -73,10 +98,21 @@ export class QuizComponent implements OnInit {
     window.scrollTo(0, document.body.scrollHeight);
   }
 
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
   async tick(): Promise<void> {
     const theSelectedOption: string | undefined = this.selectedOption;
     const correctAnswer = this.theCurrentQuestion?.answer;
-    this.quizData.push({question: this.theCurrentQuestion, answer: theSelectedOption, audio: undefined});
+    this.quizData.push(
+      {
+        question: this.theCurrentQuestion,
+        answer: theSelectedOption,
+        audioUrl: undefined,
+        startTimestamp: this.startTimeStamp,
+        endTimestamp: this.endTimeStamp
+      });
     await this.nextQuestion();
     if (correctAnswer) {
       if (this.getFileNameWithoutExtension(theSelectedOption) == correctAnswer) {
@@ -124,13 +160,28 @@ export class QuizComponent implements OnInit {
 
   public async nextQuestion() {
     if (this.currentQuestion >= this.totalQuestions) {
-      await this.router.navigate(['/intro']);
+      this.saveQuizData().subscribe(() => {
+        this.toastrService.success('Quiz data saved successfully!', 'Success', {duration: 3000});
+        this.ngZone.run(() => {
+          setTimeout(() => {
+            this.router.navigate(['/intro']);
+          }, 3000);
+        });
+      }, (errorResponse) => {
+        const errorMessage = errorResponse.error?.error || 'Unknown error';
+        this.toastrService.danger(errorMessage, 'Error');
+        console.error('Error saving quiz data: ', errorResponse.error);
+        this.ngZone.run(() => {
+          setTimeout(() => {
+            this.router.navigate(['/intro']);
+          }, 3000);
+        });
+      });
     } else if (this.questionData) {
       this.theCurrentQuestion = this.questionData.next();
       this.currentQuestion++;
     }
   }
-
 
   selectOption(option: string) {
     // update the selectedOption variable with the option selected by the user
@@ -157,19 +208,30 @@ export class QuizComponent implements OnInit {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  async displayNextQuestion(audioData: Blob) {
+  async displayNextQuestion() {
     this.showQuestionPage = true;
     await this.tick();
-
-    // Save the audio data with the last question and answer
-    if (this.quizData.length > 0) {
-      const lastEntry = this.quizData[this.quizData.length - 1];
-      lastEntry.audio = audioData;
-    }
+    this.startTimeStamp = new Date().toISOString();
   }
 
+  handleAudioRecorded(event: {url: string}) {
+    if (this.quizData.length > 0) {
+      const lastEntry = this.quizData[this.quizData.length - 1];
+      lastEntry.audioUrl = event.url;
+    }
+    // console.log('QuizData');
+    // console.log(this.quizData);
+  }
+
+
   displayRecordPage() {
+    this.endTimeStamp = new Date().toISOString();
     this.showQuestionPage = false;
+  }
+
+  saveQuizData(): Observable<any> {
+    const serverUrl = `${environment.appUrl}${environment.serverContextUrl}/users/${this.userId}/quiz`;
+    return this.http.post(`${serverUrl}`, this.quizData);
   }
 
 }

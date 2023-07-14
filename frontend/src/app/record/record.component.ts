@@ -2,6 +2,9 @@ import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {NbOverlayService, NbToastrService} from "@nebular/theme";
 import {environment} from "../../environments/environment";
+import {AngularFireStorage} from "@angular/fire/compat/storage";
+import { finalize } from 'rxjs/operators';
+import {NotificationService} from "../util/NotificationService";
 
 declare var MediaRecorder: any;
 declare var lamejs: any;
@@ -18,7 +21,15 @@ export class RecordComponent implements OnInit {
   chunks: any[] = [];
   audioFiles: SafeUrl[] = [];
   recording: boolean = false;
-  constructor(private cd: ChangeDetectorRef, private dom: DomSanitizer, private toastrService: NbToastrService, private overlayService: NbOverlayService) {}
+  recordingTime: number = environment.recordingTimeSeconds;
+  constructor(
+    private cd: ChangeDetectorRef,
+    private dom: DomSanitizer,
+    private toastrService: NbToastrService,
+    private overlayService: NbOverlayService,
+    private storage: AngularFireStorage,
+    private notificationService: NotificationService,
+  ) {}
   pressed: boolean = false;
   audioData: Blob | null = null;
 
@@ -47,7 +58,6 @@ export class RecordComponent implements OnInit {
         clipContainer.appendChild(audio);
         clipContainer.appendChild(clipLabel);
         clipContainer.appendChild(deleteButton);
-        // soundClips.appendChild(clipContainer);
 
         var thatDiv = document.getElementById('someItem');
         thatDiv?.appendChild(clipContainer);
@@ -85,6 +95,7 @@ export class RecordComponent implements OnInit {
       console.error(`The following getUserMedia error occurred: ${err}`);
     });
   }
+
   startRecording() {
     this.pressed = true;
     this.mediaRecorder.start();
@@ -197,7 +208,25 @@ export class RecordComponent implements OnInit {
     if (environment.downloadMp3ToBrowser) {
       this.downloadMp3ToBrowser(blob, fileName);
     }
-    this.onRecorderStopped(blob);
+    this.onRecorderStopped();
+    // Create a timestamp-based filename
+    const date = new Date();
+    const timestamp = date.getTime();
+    const newFileName = `${timestamp}_${fileName}`;
+    // Firebase storage upload code
+    const filePath = `audioFiles/${newFileName}`;
+    const fileRef = this.storage.ref(filePath);
+    const task = this.storage.upload(filePath, blob);
+
+    // get notified when the download URL is available
+    task.snapshotChanges().pipe(
+      finalize(() => fileRef.getDownloadURL().subscribe(
+        url => {
+          // console.log(url);
+          this.notificationService.onAudioRecorded.emit({url: url});
+        }
+      ))
+    ).subscribe();
   }
 
   private downloadMp3ToBrowser(blob: Blob, fileName: string) {

@@ -45,6 +45,10 @@
     <app-progress [maxTimerValue]=10 [tick]="displayRecordPage.bind(this)"></app-progress>
   </nb-card-footer>
 </nb-card>
-<app-record *ngIf="!showQuestionPage" [onRecorderStopped]="displayNextQuestion.bind(this)" [fileName]="(currentQuestion+1).toString()"></app-record>
+<app-record
+  *ngIf="!showQuestionPage"
+  [onRecorderStopped]="displayNextQuestion.bind(this)"
+  [fileName]="(currentQuestion+1).toString()"
+></app-record>
 
 <!--               [ngStyle]="{'flex-basis': getTheCurrentQuestionOptions().length > 6 ? 'calc(20% - 10px)' : 'calc(33.33% - 10px)'}"-->

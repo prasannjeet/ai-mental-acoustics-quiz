@@ -21,6 +21,9 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import { RecordComponent } from './record/record.component';
 import { ProgressComponent } from './progress/progress.component';
+import { AngularFireModule} from "@angular/fire/compat";
+import { AngularFireStorageModule} from "@angular/fire/compat/storage";
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -47,6 +50,8 @@ import { ProgressComponent } from './progress/progress.component';
     NbIconModule,
     NbToastrModule.forRoot(),
     KeycloakAngularModule, // add keycloakAngular module
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireStorageModule,
   ],
   providers: [
     NbToastrService,

@@ -8,7 +8,7 @@ import {interval, Subscription} from "rxjs";
 })
 export class ProgressComponent implements OnInit {
 
-  @Input() maxTimerValue: number = 10;
+  @Input() maxTimerValue: number = 10; //Default value, can be changed from parent component
 
   @Input() tick: Function | undefined;
 
