@@ -1,0 +1,119 @@
+<nb-card status="success">
+  <nb-card-header>
+    <h5>Thank you, {{userName}}</h5>
+  </nb-card-header>
+  <nb-card-body>
+    Thank you for spending your valuable time to participate in this quiz.
+    Before we can start, it is important that you read through the following information about the quiz.
+  </nb-card-body>
+</nb-card>
+
+<nb-card>
+  <nb-card-body>
+    <nb-stepper orientation="horizontal">
+      <nb-step [label]="labelOne">
+        <ng-template #labelOne><strong>About</strong></ng-template>
+        <h4><strong>About the Questions</strong></h4>
+        <p class="lorem">
+          In this quiz, you will be presented with a set of Logical Reasoning questions. In all the questions, you have
+          to choose the option that best fits the question.
+
+          In EACH question, you will be provided with 3 or more patterns on the left side, looking at these patterns,
+          you have to determine what could potentially be the next pattern in the sequence. For this purpose, you will
+          be provided with 4 or more options on the right side. You have to choose one option that best fits the
+          sequence. You can only choose one option. Click on the image to select the option.
+        </p>
+        <p class="lorem">
+          For each question, you will be provided {{quizTime}} seconds only. Thus, you must choose an option within
+          {{quizTime}} seconds.
+
+          You cannot manually move to the next question. Whether you choose an option or not, the next question will
+          automatically be displayed after {{quizTime}} seconds.
+        </p>
+        <button nbButton disabled nbStepperNext>prev</button>
+        <button nbButton nbStepperNext>next</button>
+      </nb-step>
+
+      <nb-step [label]="labelTwo">
+        <ng-template #labelTwo><strong>Audio</strong></ng-template>
+        <h4><strong>About the Audio Recording</strong></h4>
+        <p class="lorem">
+          As you are aware that we will also record your voice during this quiz, this will be done after EACH question.
+          As soon as the time limit for answering a question is over, you will be navigated to a page where you will be
+          asked to read a sentence. You will be provided with {{recordTime}} seconds to read the sentence. You can read
+          the sentence as many times as you want within the time limit. After {{recordTime}} seconds, the recording will
+          automatically stop and you will be navigated to the next question.
+        </p>
+        <button nbButton nbStepperPrevious>prev</button>
+        <button nbButton nbStepperNext>next</button>
+      </nb-step>
+
+      <nb-step label="Movement">
+        <h4><strong>Movement</strong></h4>
+        <p class="lorem">
+          Note that it is recommended that you limit your movement during the quiz. This is because any excessive
+          movement creates a large noise in the EEG signal that we are recording. Nevertheless, please make sure that
+          you are as comfortable as possible during the quiz.
+
+          This is the reason you will not be provided with any pen or paper to calculate or evaluate the questions, as
+          this will require you to move your hands and arms, thus, affecting the EEG signal.
+
+          Use the mouse to select the option by clicking on the image.
+        </p>
+        <button nbButton nbStepperPrevious>prev</button>
+        <button nbButton nbStepperNext>next</button>
+      </nb-step>
+
+      <nb-step [label]="labelFour">
+        <ng-template #labelFour><strong>Finally...</strong></ng-template>
+        <h4><strong>Finally</strong></h4>
+        <p class="lorem">
+          Thank you so much for going through the information.
+          In case you have any questions, please feel free to ask the researcher now. Furthermore, Note that you can:
+        </p>
+        <nb-list>
+          <nb-list-item>1. Stop the quiz at any time.</nb-list-item>
+          <nb-list-item>2. Call the researcher at any time.</nb-list-item>
+          <nb-list-item>3. Even after you finish the quiz, you can ask the researcher to delete your data at any time.
+          </nb-list-item>
+        </nb-list>
+        <p></p>
+        <p class="lorem">
+          Clicking on the "Start Quiz" button will start the quiz. And by clicking on the "Start Quiz" button, you
+          agree to the following:
+        </p>
+        <nb-card>
+          <nb-card-body>
+            <p>
+              <nb-checkbox [(checked)]="checkbox1">I have read and understood the information provided above, and in
+                previous steps.
+              </nb-checkbox>
+            </p>
+            <p>
+              <nb-checkbox [(checked)]="checkbox2">I have read and signed the consent form that was provided to me. <a
+                href="assets/files/Consent_Form.pdf" target="_blank">Click here to view the consent form</a>
+              </nb-checkbox>
+            </p>
+            <p>
+              <nb-checkbox [(checked)]="checkbox3">I have read and understood the document called "Information For
+                Participants" that was provided to me. <a href="assets/files/Info_For_Participants.pdf" target="_blank">Click
+                  here to view the document</a></nb-checkbox>
+            </p>
+          </nb-card-body>
+        </nb-card>
+        <p class="lorem">
+          Best of luck for the quiz!
+        </p>
+        <button nbButton nbStepperPrevious>prev</button>
+        <button
+          nbButton
+          [disabled]="!checkbox1 || !checkbox2 || !checkbox3"
+          nbStepperNext
+          routerLink="/quiz"
+        >Start the Quiz!
+        </button>
+      </nb-step>
+
+    </nb-stepper>
+  </nb-card-body>
+</nb-card>

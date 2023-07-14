@@ -12,7 +12,13 @@ import {
   NbCardModule,
   NbRadioModule,
   NbButtonModule,
-  NbProgressBarModule, NbIconModule, NbToastrService, NbOverlayService, NbToastrModule
+  NbProgressBarModule,
+  NbIconModule,
+  NbToastrService,
+  NbOverlayService,
+  NbToastrModule,
+  NbStepperModule,
+  NbCheckboxModule, NbListModule
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { IntroComponent } from './intro/intro.component';
@@ -24,6 +30,7 @@ import { ProgressComponent } from './progress/progress.component';
 import { AngularFireModule} from "@angular/fire/compat";
 import { AngularFireStorageModule} from "@angular/fire/compat/storage";
 import { environment } from '../environments/environment';
+import { TermsComponent } from './terms/terms.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +39,7 @@ import { environment } from '../environments/environment';
     QuizComponent,
     RecordComponent,
     ProgressComponent,
+    TermsComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,6 +60,9 @@ import { environment } from '../environments/environment';
     KeycloakAngularModule, // add keycloakAngular module
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireStorageModule,
+    NbStepperModule,
+    NbCheckboxModule,
+    NbListModule,
   ],
   providers: [
     NbToastrService,

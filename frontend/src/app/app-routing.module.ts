@@ -4,6 +4,7 @@ import {IntroComponent} from "./intro/intro.component";
 import {QuizComponent} from "./quiz/quiz.component";
 import {RecordComponent} from "./record/record.component";
 import { AuthGuard } from "./auth/auth.guard";
+import {TermsComponent} from "./terms/terms.component";
 
 const routes: Routes = [
   {
@@ -23,6 +24,11 @@ const routes: Routes = [
   {
     path: "record",
     component: RecordComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: "terms",
+    component: TermsComponent,
     canActivate: [AuthGuard],
   }
 ];

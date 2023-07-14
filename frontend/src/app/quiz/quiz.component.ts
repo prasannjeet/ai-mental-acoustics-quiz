@@ -17,6 +17,7 @@ import {environment} from "../../environments/environment";
   styleUrls: ['./quiz.component.scss']
 })
 export class QuizComponent implements OnInit {
+  quizTime: number = environment.quizTimeSeconds;
   questionData: QuestionData | undefined;
   theCurrentQuestion: Problem | undefined;
   currentQuestion: number = 0;
@@ -214,7 +215,7 @@ export class QuizComponent implements OnInit {
     this.startTimeStamp = new Date().toISOString();
   }
 
-  handleAudioRecorded(event: {url: string}) {
+  handleAudioRecorded(event: { url: string }) {
     if (this.quizData.length > 0) {
       const lastEntry = this.quizData[this.quizData.length - 1];
       lastEntry.audioUrl = event.url;

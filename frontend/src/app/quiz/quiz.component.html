@@ -1,8 +1,8 @@
 <nb-card *ngIf="showQuestionPage" class="ai-main-card">
   <nb-card-header style="display: flex">
     Question {{ currentQuestion + 1 }} {{getTheCurrentQuestionTitle()}}
-    <button style="margin-left: auto" nbButton status="danger" (click)="refreshPage()">Reset</button>
-    <button nbButton (click)="nextQuestion()">Next</button>
+<!--    <button style="margin-left: auto" nbButton status="danger" (click)="refreshPage()">Reset</button>-->
+<!--    <button nbButton (click)="nextQuestion()">Next</button>-->
   </nb-card-header>
   <nb-card-body class="ai-outer-card">
     <nb-card class="ai-card-1">
@@ -42,7 +42,7 @@
     </nb-card>
   </nb-card-body>
   <nb-card-footer>
-    <app-progress [maxTimerValue]=10 [tick]="displayRecordPage.bind(this)"></app-progress>
+    <app-progress [maxTimerValue]=quizTime [tick]="displayRecordPage.bind(this)"></app-progress>
   </nb-card-footer>
 </nb-card>
 <app-record

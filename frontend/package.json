@@ -1,12 +1,15 @@
 {
   "name": "ai-mental-acoustics-quiz",
-  "version": "0.0.0",
+  "version": "2.0.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4201 --host=0.0.0.0 --disable-host-check -o",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "docker:build": "docker build -t prasannjeet/${npm_package_name}:${npm_package_version} -f docker/Dockerfile .",
+    "docker:start": "docker run -p 4201:4201 prasannjeet/${npm_package_name}:${npm_package_version}",
+    "docker:push": "docker buildx build --push --platform linux/arm64/v8,linux/amd64 -f docker/Dockerfile --tag prasannjeet/${npm_package_name}:${npm_package_version} ."
   },
   "private": true,
   "dependencies": {
