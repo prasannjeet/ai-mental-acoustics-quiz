@@ -42,7 +42,7 @@
     </nb-card>
   </nb-card-body>
   <nb-card-footer>
-    <app-progress [maxTimerValue]=quizTime [tick]="displayRecordPage.bind(this)"></app-progress>
+    <app-progress [maxTimerValue]=getMaxTimerValue() [tick]="displayRecordPage.bind(this)"></app-progress>
   </nb-card-footer>
 </nb-card>
 <app-record

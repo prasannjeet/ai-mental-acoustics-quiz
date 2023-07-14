@@ -103,6 +103,13 @@ export class QuizComponent implements OnInit {
     this.subscription.unsubscribe();
   }
 
+  getMaxTimerValue(): number {
+    if (this.theCurrentQuestion?.questionType === 'challenging') {
+      return this.quizTime * 2;
+    }
+    return this.quizTime;
+  }
+
   async tick(): Promise<void> {
     const theSelectedOption: string | undefined = this.selectedOption;
     const correctAnswer = this.theCurrentQuestion?.answer;
