@@ -70,7 +70,7 @@ public class TestController {
     problem.setQuestionName(problemDTO.getQuestionName());
     problem.setQuestionType(problemDTO.getQuestionType());
     problem.setOptions(problemDTO.getOptions());
-    problem.setAnswer(problemDTO.getAnswer());
+    problem.setTheAnswer(problemDTO.getAnswer());
     return problem;
   }
 }

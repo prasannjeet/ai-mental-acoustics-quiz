@@ -30,7 +30,7 @@ public class QuizData {
 
     @ElementCollection
     private Map<String, String> options;
-    private String answer;
+    private String theAnswer;
   }
 
   @Embedded
