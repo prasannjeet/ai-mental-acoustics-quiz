@@ -24,11 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/users")
 @Slf4j
-public class TestController {
+public class QuizController {
   
   public final QuizDataRepository quizDataRepository;
 
-  public TestController(QuizDataRepository quizDataRepository) {
+  public QuizController(QuizDataRepository quizDataRepository) {
     this.quizDataRepository = quizDataRepository;
   }
 
