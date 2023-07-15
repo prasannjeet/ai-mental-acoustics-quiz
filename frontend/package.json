@@ -1,6 +1,6 @@
 {
   "name": "ai-mental-acoustics-quiz",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4201 --host=0.0.0.0 --disable-host-check -o",
