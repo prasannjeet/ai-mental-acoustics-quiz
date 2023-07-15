@@ -1,5 +1,7 @@
 # AiMentalAcousticsQuiz
 
+Angular based frontend for Quiz application.
+
 ## Package Manager Used:
 - npm
 
