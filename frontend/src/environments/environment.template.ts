@@ -9,6 +9,7 @@ export const environment = {
   hostname: '<hostname>', // The hostname of your server, e.g., 'https://aima.ooguy.com'
   serverContextUrl: '<serverContextUrl>', // The context URL of your server, e.g., '/api'
   appUrl: '<appUrl>', // The URL of your app, e.g., 'https://aimaback.ooguy.com'
+  flaskUrl: '<flaskUrl>', // The URL of your Flask server, e.g., 'http://localhost:5000'
   keycloak: {
     issuer: '<issuer>', // The issuer URL of your Keycloak server, e.g., 'https://keycloak.ooguy.com/'
     realm: '<realm>', // The realm of your Keycloak server, e.g., 'aima'

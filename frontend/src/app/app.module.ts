@@ -18,7 +18,7 @@ import {
   NbOverlayService,
   NbToastrModule,
   NbStepperModule,
-  NbCheckboxModule, NbListModule
+  NbCheckboxModule, NbListModule, NbTabsetModule, NbMenuModule, NbAccordionModule, NbSidebarModule, NbSidebarService
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { IntroComponent } from './intro/intro.component';
@@ -31,6 +31,8 @@ import { AngularFireModule} from "@angular/fire/compat";
 import { AngularFireStorageModule} from "@angular/fire/compat/storage";
 import { environment } from '../environments/environment';
 import { TermsComponent } from './terms/terms.component';
+import { UserRecordingsComponent } from './user-recordings/user-recordings.component';
+import {NbMenuInternalService} from "@nebular/theme/components/menu/menu.service";
 
 @NgModule({
   declarations: [
@@ -40,6 +42,7 @@ import { TermsComponent } from './terms/terms.component';
     RecordComponent,
     ProgressComponent,
     TermsComponent,
+    UserRecordingsComponent,
   ],
   imports: [
     BrowserModule,
@@ -63,9 +66,15 @@ import { TermsComponent } from './terms/terms.component';
     NbStepperModule,
     NbCheckboxModule,
     NbListModule,
+    NbTabsetModule,
+    NbMenuModule.forRoot(),
+    NbAccordionModule,
+    NbSidebarModule,
+    NbMenuModule,
   ],
   providers: [
     NbToastrService,
+    NbSidebarService,
     NbOverlayService,
     {
       provide: APP_INITIALIZER,

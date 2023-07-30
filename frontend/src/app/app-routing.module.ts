@@ -5,6 +5,7 @@ import {QuizComponent} from "./quiz/quiz.component";
 import {RecordComponent} from "./record/record.component";
 import { AuthGuard } from "./auth/auth.guard";
 import {TermsComponent} from "./terms/terms.component";
+import {UserRecordingsComponent} from "./user-recordings/user-recordings.component";
 
 const routes: Routes = [
   {
@@ -30,6 +31,16 @@ const routes: Routes = [
     path: "terms",
     component: TermsComponent,
     canActivate: [AuthGuard],
+  },
+  {
+    path: 'user-recordings',
+    component: UserRecordingsComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['aima-admin'] }
+  },
+  {
+    path: '**',
+    redirectTo: ''
   }
 ];
 

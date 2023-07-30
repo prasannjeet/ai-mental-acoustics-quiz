@@ -82,6 +82,7 @@ export class QuizComponent implements OnInit {
     private ngZone: NgZone
   ) {
     this.userId = keycloakService.getKeycloakInstance().subject;
+    let jwt: string | undefined = keycloakService.getKeycloakInstance().token;
     this.loadQuizData().subscribe((qd: QuestionData) => {
       this.questionData = qd;
       this.theCurrentQuestion = this.questionData.next();
@@ -220,6 +221,15 @@ export class QuizComponent implements OnInit {
     this.showQuestionPage = true;
     await this.tick();
     this.startTimeStamp = new Date().toISOString();
+
+    // Send an annotation with the text "Q1", "Q2", etc.
+    const annotationText = `Q${this.currentQuestion}`;
+    const flaskAnnotateUrl = `${environment.flaskUrl}/annotate`;
+    this.http.post(flaskAnnotateUrl, { annotation: annotationText }).subscribe(response => {
+      console.log('Annotation response:', response);
+    }, error => {
+      console.error('Error annotating:', error);
+    });
   }
 
   handleAudioRecorded(event: { url: string }) {
@@ -235,12 +245,32 @@ export class QuizComponent implements OnInit {
   displayRecordPage() {
     this.endTimeStamp = new Date().toISOString();
     this.showQuestionPage = false;
+
+    // Send an annotation with the text "R1", "R2", etc.
+    const annotationText = `R${this.currentQuestion}`;
+    const flaskAnnotateUrl = `${environment.flaskUrl}/annotate`;
+    this.http.post(flaskAnnotateUrl, { annotation: annotationText }).subscribe(response => {
+      console.log('Annotation response:', response);
+    }, error => {
+      console.error('Error annotating:', error);
+    });
   }
 
+
   saveQuizData(): Observable<any> {
+    // Send a stop request to the Flask app
+    const flaskStopUrl = `${environment.flaskUrl}/stop`;
+    this.http.post(flaskStopUrl, {}).subscribe(response => {
+      console.log('Flask stop response:', response);
+    }, error => {
+      console.error('Error stopping Flask:', error);
+    });
+
+    // save quiz data
     const serverUrl = `${environment.appUrl}${environment.serverContextUrl}/users/${this.userId}/quiz`;
     return this.http.post(`${serverUrl}`, this.quizData);
   }
+
 
 }
 

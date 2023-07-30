@@ -1,0 +1,62 @@
+<nb-layout>
+  <nb-sidebar responsive>
+    <nb-list style="margin-top: 50px">
+      <nb-list-item *ngFor="let user of menuItems; let i = index" (click)="selectUser(i)">
+        {{ user.title }}
+      </nb-list-item>
+    </nb-list>
+  </nb-sidebar>
+
+  <nb-layout-column>
+
+
+    <nb-card>
+      <nb-card-header *ngIf="selectedUser" style="display: flex">
+        User: {{ selectedUser.user }}
+      </nb-card-header>
+      <nb-card-body *ngIf="selectedUser">
+
+
+        <nb-accordion style="margin-bottom: 20px">
+          <nb-accordion-item>
+            <nb-accordion-item-header>
+              View Plot
+            </nb-accordion-item-header>
+            <nb-accordion-item-body>
+              <img [src]="selectedUser.plot" alt="Plot"/>
+            </nb-accordion-item-body>
+          </nb-accordion-item>
+
+        </nb-accordion>
+
+
+        <nb-accordion style="margin-bottom: 20px">
+          <nb-accordion-item>
+            <nb-accordion-item-header>
+              Click to download recordings
+            </nb-accordion-item-header>
+            <nb-accordion-item-body>
+              <div class="recording-buttons">
+                <a *ngFor="let recording of selectedUser.recordings; let i = index"
+                   nbButton
+                   hero
+                   [href]="recording"
+                   [download]="'recording-' + (i + 1) + '.mp3'"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                  Recording {{ i + 1 }}
+                </a>
+              </div>
+            </nb-accordion-item-body>
+          </nb-accordion-item>
+
+        </nb-accordion>
+        <nb-card>
+          <nb-card-body>
+            <a nbButton hero [href]="selectedUser.fifFile" download>Download FIF File</a>
+          </nb-card-body>
+        </nb-card>
+      </nb-card-body>
+    </nb-card>
+  </nb-layout-column>
+</nb-layout>

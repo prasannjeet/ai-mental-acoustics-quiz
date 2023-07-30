@@ -2,6 +2,7 @@ import {Component, ElementRef, ViewChild, ViewEncapsulation} from '@angular/core
 import {Meta} from '@angular/platform-browser';
 import {environment} from "../environments/environment";
 import { KeycloakService } from 'keycloak-angular';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-root',
@@ -14,9 +15,12 @@ export class AppComponent {
   userId: string | undefined;
   userName: string | undefined;
   isLoggedIn: boolean = false;
+  isAdmin: boolean = false;
+  theRouter: Router;
   @ViewChild('scrollTarget', {static: true}) scrollTarget: ElementRef | undefined;
 
-  constructor(private meta: Meta, public keycloakService: KeycloakService) {
+  constructor(private meta: Meta, public keycloakService: KeycloakService, router: Router) {
+    this.theRouter = router;
     this.meta.addTag({ name: 'title', content: 'AiMentalAcoustics Quiz' });
     this.meta.addTag({ name: 'description', content: 'This quiz will help us learn more about how voice acoustics are related to mental stress. Thank you for participating in the test.' });
     this.meta.addTag({ property: 'og:title', content: 'AiMentalAcoustics Quiz' });
@@ -28,7 +32,8 @@ export class AppComponent {
     this.keycloakService.isLoggedIn().then(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });
-    console.log(`userId: ${this.userId}, userName: ${this.userName}, isLoggedIn: ${this.isLoggedIn}`);
+    this.isAdmin = this.keycloakService.getUserRoles().includes('aima-admin');
+    // console.log(`userId: ${this.userId}, userName: ${this.userName}, isLoggedIn: ${this.isLoggedIn}`);
   }
 
   logout() {

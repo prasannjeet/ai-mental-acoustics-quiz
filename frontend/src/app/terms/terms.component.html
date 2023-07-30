@@ -10,7 +10,29 @@
 
 <nb-card>
   <nb-card-body>
-    <nb-stepper orientation="horizontal">
+    <nb-stepper #stepper orientation="horizontal">
+      <nb-step [label]="labelZero">
+        <ng-template #labelZero><strong>EEG HeadSet</strong></ng-template>
+        <h4><strong>Ensure that you have the headset on</strong></h4>
+        <p class="lorem">
+          At this step, please ensure that you have the headset on. The headset is required to record your EEG signal.
+        </p>
+        <nb-card>
+          <nb-card-body>
+            <p>
+              <nb-checkbox [(checked)]="isHeadsetWore">I have the headset on.</nb-checkbox>
+            </p>
+          </nb-card-body>
+        </nb-card>
+        <button nbButton disabled nbStepperNext>prev</button>
+        <button
+          nbButton
+          [disabled]="!isHeadsetWore"
+          nbStepperNext
+          (click)="startEEGRecording()"> <!-- Add this line -->
+          next
+        </button>
+      </nb-step>
       <nb-step [label]="labelOne">
         <ng-template #labelOne><strong>About</strong></ng-template>
         <h4><strong>About the Questions</strong></h4>

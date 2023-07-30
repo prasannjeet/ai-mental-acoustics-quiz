@@ -3,6 +3,15 @@
   <nb-layout-header fixed>
     <div class="header-container">
       <a href="/"><img src="assets/logo_grey.png" alt="logo" class="ai-logo"></a>
+      <!-- Add the "View Recordings" button if the user is an admin -->
+      <button
+        *ngIf="isAdmin"
+        nbButton
+        status="info"
+        size="small"
+        (click)="this.theRouter.navigate(['/user-recordings']);">
+        Hello Admin, View Recordings
+      </button>
       <span *ngIf="isLoggedIn" class="welcome-text">
         Welcome, {{ userName }}
         <button
@@ -11,7 +20,7 @@
           size="small"
           (click)="logout()">
           Logout
-    </button>
+        </button>
       </span>
     </div>
   </nb-layout-header>
