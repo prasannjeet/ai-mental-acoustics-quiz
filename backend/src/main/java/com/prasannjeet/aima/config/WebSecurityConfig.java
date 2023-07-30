@@ -8,12 +8,12 @@ import static org.springframework.security.oauth2.jwt.JwtDecoders.fromIssuerLoca
 import static org.springframework.security.oauth2.jwt.JwtValidators.createDefaultWithIssuer;
 
 import com.prasannjeet.aima.config.util.JwtAudienceValidator;
-import com.prasannjeet.aima.config.util.JwtAuthConverter;
 import com.prasannjeet.aima.config.util.RolesLoggingFilter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
@@ -21,6 +21,7 @@ import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -32,13 +33,17 @@ import org.springframework.web.filter.CorsFilter;
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class WebSecurityConfig {
   private static final String DEFAULT_AUDIENCE = "account";
-  private final JwtAuthConverter jwtAuthConverter;
   private final KeycloakConfig keycloakConfig;
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+    JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+    jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new KeycloakRoleConverter());
+    
     CorsFilter corsFilter = new CorsFilter(corsConfigurationSource());
     http.authorizeHttpRequests()
         .requestMatchers(
@@ -53,7 +58,7 @@ public class WebSecurityConfig {
         .permitAll()
         .anyRequest()
         .authenticated();
-    http.oauth2ResourceServer().jwt().jwtAuthenticationConverter(jwtAuthConverter);
+    http.oauth2ResourceServer().jwt().jwtAuthenticationConverter(jwtAuthenticationConverter);
     http.sessionManagement().sessionCreationPolicy(STATELESS);
 
     // Add a custom filter to log the user roles
