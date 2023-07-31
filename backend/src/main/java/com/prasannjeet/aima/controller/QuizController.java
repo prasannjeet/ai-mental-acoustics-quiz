@@ -4,15 +4,17 @@ import com.prasannjeet.aima.dto.ProblemDTO;
 import com.prasannjeet.aima.dto.QuizDataDTO;
 import com.prasannjeet.aima.dto.UserRecordingDTO;
 import com.prasannjeet.aima.jpa.entity.FifFile;
+import com.prasannjeet.aima.jpa.entity.Question;
 import com.prasannjeet.aima.jpa.entity.QuizData;
-import com.prasannjeet.aima.jpa.entity.QuizData.Problem;
 import com.prasannjeet.aima.jpa.repository.FifFileRepository;
+import com.prasannjeet.aima.jpa.repository.QuestionRepository;
 import com.prasannjeet.aima.jpa.repository.QuizDataRepository;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,15 +30,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/users")
 @Slf4j
+@RequiredArgsConstructor
 public class QuizController {
   
-  public final QuizDataRepository quizDataRepository;
-  public final FifFileRepository fifFileRepository;
-
-  public QuizController(QuizDataRepository quizDataRepository, FifFileRepository fifFileRepository) {
-    this.quizDataRepository = quizDataRepository;
-    this.fifFileRepository = fifFileRepository;
-  }
+  private final QuizDataRepository quizDataRepository;
+  private final FifFileRepository fifFileRepository;
+  private final QuestionRepository questionRepository;
 
   @CrossOrigin
   @PreAuthorize("hasRole('aima-admin')")
@@ -89,7 +88,7 @@ public class QuizController {
       dto.setUser(userId);
 
       // Fetch audio URLs for the user
-      List<String> audioUrls = quizDataRepository.findAudioUrlsByUserId(userId);
+      List<String> audioUrls = quizDataRepository.findDistinctAudioUrlByUserId(userId);
       dto.setRecordings(audioUrls);
 
       // Fetch FIF file and plot image URL for the user
@@ -109,16 +108,7 @@ public class QuizController {
     log.info("Received data for user: {}", userId);
     Map<String, String> response = new HashMap<>();
     try {
-      for (QuizDataDTO data : quizData) {
-        QuizData quiz = new QuizData();
-        quiz.setUserId(userId);
-        quiz.setQuestion(convertProblemDTOtoProblem(data.getQuestion()));
-        quiz.setAnswer(data.getAnswer());
-        quiz.setAudioUrl(data.getAudioUrl());
-        quiz.setStartTimestamp(data.getStartTimestamp());
-        quiz.setEndTimestamp(data.getEndTimestamp());
-        quizDataRepository.save(quiz);
-      }
+      quizData.forEach(data -> quizDataRepository.save(convertQuizDataDTOToQuizData(userId, data)));
       response.put("message", "Data received successfully");
       log.info("Quiz data saved successfully for user: {}", userId);
       return ResponseEntity.ok(response);
@@ -129,12 +119,27 @@ public class QuizController {
     }
   }
 
-  private Problem convertProblemDTOtoProblem(ProblemDTO problemDTO) {
-    Problem problem = new Problem();
-    problem.setQuestionName(problemDTO.getQuestionName());
-    problem.setQuestionType(problemDTO.getQuestionType());
-    problem.setOptions(problemDTO.getOptions());
-    problem.setTheAnswer(problemDTO.getAnswer());
-    return problem;
+  public QuizData convertQuizDataDTOToQuizData(String userId, QuizDataDTO dto) {
+    QuizData data = new QuizData();
+    data.setUserId(userId);
+    data.setQuestionId(getQuestionId(dto.getQuestion()));
+    data.setAnswer(dto.getAnswer());
+    data.setAudioUrl(dto.getAudioUrl());
+    data.setStartTimestamp(dto.getStartTimestamp());
+    data.setEndTimestamp(dto.getEndTimestamp());
+    return data;
   }
+  
+  private Long getQuestionId(ProblemDTO problemDTO) {
+    return questionRepository.findQuestionByQuestionNameAndQuestionType(problemDTO.getQuestionName(), problemDTO.getQuestionType())
+        .orElseGet(() -> {
+          Question question = new Question();
+          question.setQuestionName(problemDTO.getQuestionName());
+          question.setQuestionType(problemDTO.getQuestionType());
+          question.setOptions(problemDTO.getOptions());
+          questionRepository.save(question);
+          return question;
+        }).getId();
+  }
+  
 }
