@@ -70,6 +70,7 @@ export class QuizComponent implements OnInit {
   quizForm: FormGroup | undefined; // form to hold the selected option for the current question
   public selectedOption: string | undefined;
   private subscription: Subscription;
+  private audioUrlResolver: ((url: string) => void) | undefined;
 
   constructor(
     private fb: FormBuilder,
@@ -169,6 +170,14 @@ export class QuizComponent implements OnInit {
 
   public async nextQuestion() {
     if (this.currentQuestion >= this.totalQuestions) {
+      // Create a Promise that will resolve when the audio URL is received
+      const audioUrlPromise = new Promise<string>((resolve) => {
+        this.audioUrlResolver = resolve;
+      });
+      // Wait for the audio URL Promise to resolve
+      // Ensure we receive the audio URL before sending the quiz data
+      await audioUrlPromise;
+
       this.saveQuizData().subscribe(() => {
         this.toastrService.success('Quiz data saved successfully!', 'Success', {duration: 3000});
         this.ngZone.run(() => {
@@ -236,6 +245,11 @@ export class QuizComponent implements OnInit {
     if (this.quizData.length > 0) {
       const lastEntry = this.quizData[this.quizData.length - 1];
       lastEntry.audioUrl = event.url;
+    }
+
+    // If this is the last question, resolve the Promise with the audio URL
+    if (this.currentQuestion >= this.totalQuestions && this.audioUrlResolver) {
+      this.audioUrlResolver(event.url);
     }
     // console.log('QuizData');
     // console.log(this.quizData);

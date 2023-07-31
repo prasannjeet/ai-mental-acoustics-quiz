@@ -5,6 +5,7 @@ import {environment} from "../../environments/environment";
 import {AngularFireStorage} from "@angular/fire/compat/storage";
 import { finalize } from 'rxjs/operators';
 import {NotificationService} from "../util/NotificationService";
+import {KeycloakService} from "keycloak-angular";
 
 declare var MediaRecorder: any;
 declare var lamejs: any;
@@ -29,6 +30,7 @@ export class RecordComponent implements OnInit {
     private overlayService: NbOverlayService,
     private storage: AngularFireStorage,
     private notificationService: NotificationService,
+    public keycloakService: KeycloakService,
   ) {}
   pressed: boolean = false;
   audioData: Blob | null = null;
@@ -210,9 +212,11 @@ export class RecordComponent implements OnInit {
     }
     this.onRecorderStopped();
     // Create a timestamp-based filename
-    const date = new Date();
-    const timestamp = date.getTime();
-    const newFileName = `${timestamp}_${fileName}`;
+    const userId = this.keycloakService.getUsername();
+    // const date = new Date();
+    // const timestamp = date.getTime();
+    // const newFileName = `${timestamp}_${fileName}`;
+    const newFileName = `${userId}_Q${fileName}`;
     // Firebase storage upload code
     const filePath = `audioFiles/${newFileName}`;
     const fileRef = this.storage.ref(filePath);
@@ -222,7 +226,7 @@ export class RecordComponent implements OnInit {
     task.snapshotChanges().pipe(
       finalize(() => fileRef.getDownloadURL().subscribe(
         url => {
-          // console.log(url);
+          console.log(url);
           this.notificationService.onAudioRecorded.emit({url: url});
         }
       ))
