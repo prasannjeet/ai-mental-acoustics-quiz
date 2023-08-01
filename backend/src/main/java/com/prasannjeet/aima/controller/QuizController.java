@@ -10,6 +10,7 @@ import com.prasannjeet.aima.jpa.repository.FifFileRepository;
 import com.prasannjeet.aima.jpa.repository.QuestionRepository;
 import com.prasannjeet.aima.jpa.repository.QuizDataRepository;
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,11 +56,13 @@ public class QuizController {
   public ResponseEntity<Map<String, String>> saveFifUrl(@PathVariable String userId, @RequestBody Map<String, String> requestBody) {
     String fifUrl = requestBody.get("fifUrl");
     String imageUrl = requestBody.get("imageUrl");
+    LocalDateTime startTime = LocalDateTime.parse(requestBody.get("startTime")); // New line
 
     FifFile fifFile = fifFileRepository.findFifFileByUserId(userId).orElse(new FifFile());
     fifFile.setUserId(userId);
     fifFile.setFifUrl(fifUrl);
     fifFile.setImageUrl(imageUrl);
+    fifFile.setStartTime(startTime); // New line
 
     try {
       fifFileRepository.save(fifFile);
