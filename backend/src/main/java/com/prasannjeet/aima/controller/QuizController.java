@@ -1,8 +1,10 @@
 package com.prasannjeet.aima.controller;
 
+import com.prasannjeet.aima.dto.AudioDTO;
 import com.prasannjeet.aima.dto.ProblemDTO;
 import com.prasannjeet.aima.dto.QuizDataDTO;
 import com.prasannjeet.aima.dto.UserRecordingDTO;
+import com.prasannjeet.aima.dto.UserResponseDTO;
 import com.prasannjeet.aima.jpa.entity.FifFile;
 import com.prasannjeet.aima.jpa.entity.Question;
 import com.prasannjeet.aima.jpa.entity.QuizData;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -49,6 +52,21 @@ public class QuizController {
   @Transactional
   public ResponseEntity<Map<String, String>> saveQuizData(@PathVariable String userId, @RequestBody List<QuizDataDTO> quizData) {
     return saveOrUpdateQuizData(userId, quizData);
+  }
+
+  private synchronized ResponseEntity<Map<String, String>> saveOrUpdateQuizData(String userId, List<QuizDataDTO> quizData) {
+    log.info("Received data for user: {}", userId);
+    Map<String, String> response = new HashMap<>();
+    try {
+      quizData.forEach(data -> quizDataRepository.save(convertQuizDataDTOToQuizData(userId, data)));
+      response.put("message", "Data received successfully");
+      log.info("Quiz data saved successfully for user: {}", userId);
+      return ResponseEntity.ok(response);
+    } catch (Exception e) {
+      log.error("Error saving data for user: {}", userId, e);
+      response.put("error", e.getMessage() != null ? e.getMessage() : "Unknown error");
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    }
   }
 
   @PostMapping("/{userId}/fifUrl")
@@ -107,22 +125,35 @@ public class QuizController {
     return response;
   }
 
-  private synchronized ResponseEntity<Map<String, String>> saveOrUpdateQuizData(String userId, List<QuizDataDTO> quizData) {
-    log.info("Received data for user: {}", userId);
-    Map<String, String> response = new HashMap<>();
-    try {
-      quizData.forEach(data -> quizDataRepository.save(convertQuizDataDTOToQuizData(userId, data)));
-      response.put("message", "Data received successfully");
-      log.info("Quiz data saved successfully for user: {}", userId);
-      return ResponseEntity.ok(response);
-    } catch (Exception e) {
-      log.error("Error saving data for user: {}", userId, e);
-      response.put("error", e.getMessage() != null ? e.getMessage() : "Unknown error");
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+  @PreAuthorize("hasRole('aima-admin')")
+  @GetMapping("/analysisData")
+  public ResponseEntity<List<UserResponseDTO>> getAnalysisData() {
+    List<UserResponseDTO> response = new ArrayList<>();
+
+    // Get all FifFiles
+    List<FifFile> fifFiles = fifFileRepository.findAll();
+
+    for (FifFile fifFile : fifFiles) {
+      UserResponseDTO userResponseDTO = new UserResponseDTO();
+      userResponseDTO.setUserId(fifFile.getUserId());
+      userResponseDTO.setFifUrl(fifFile.getFifUrl());
+      userResponseDTO.setFifStartTime(fifFile.getStartTime().toString());
+
+      // Get QuizData for the user
+      List<QuizData> quizDataList = quizDataRepository.findByUserId(fifFile.getUserId());
+      List<AudioDTO> audioDTOs = quizDataList.stream()
+          .map(qd -> new AudioDTO(qd.getQuestionId(), qd.getAudioUrl(), qd.getStartTimestamp()))
+          .collect(Collectors.toList());
+
+      userResponseDTO.setAudio(audioDTOs);
+
+      response.add(userResponseDTO);
     }
+
+    return ResponseEntity.ok(response);
   }
 
-  public QuizData convertQuizDataDTOToQuizData(String userId, QuizDataDTO dto) {
+  private QuizData convertQuizDataDTOToQuizData(String userId, QuizDataDTO dto) {
     QuizData data = new QuizData();
     data.setUserId(userId);
     data.setQuestionId(getQuestionId(dto.getQuestion()));

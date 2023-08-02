@@ -17,4 +17,7 @@ public interface QuizDataRepository extends JpaRepository<QuizData, QuizDataKey>
   @Query("select distinct q.userId from QuizData q")
   List<String> findDistinctUserId();
   
+  @Query("select q from QuizData q where q.userId = ?1")
+  List<QuizData> findByUserId(String userId);
+  
 }
